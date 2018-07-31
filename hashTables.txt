@@ -1,0 +1,306 @@
+1. What is a hash table?
+
+A:
+
+A hash table (hash map) is a data structure used to implement an associative array, 
+a structure that can map keys to values. A hash table uses a hash function to 
+compute an index into an array of buckets or slots, from which the desired value 
+can be found. 
+
+2. What is hashing?
+
+A:
+
+Hashing refers to the implementation of a hash function. The hash function takes 
+two parameters, a key and a storage amount. Keys are usually strings and storage 
+amount is usually a Non-zero integer. Keys are transformed into integer values 
+based on the length of the storage amount. This newly formed integer will be the
+hash code. 
+
+3. How does a hash table store data?
+
+A:
+
+Created hash codes store key-value pairs according to the array index of the hashtable.
+An element is converted into an integer by using a hash function. This element can be 
+used as an index to store the original element, which falls into the hash table.
+The element is stored in the hash table where it can be quickly retrieved using hashed key.
+
+hash = hashfunc(key)
+index = hash % array_size
+
+4. How are hash tables and objects different?
+
+A:
+
+The main idea of hash tables is to distribute key/value pairs uniformly accross an array. 
+Each element of the array is assigned a converted key. Using this key, you can access 
+the element.
+
+Whereas the main idea of objects is to be able to organize a collection of properties
+that make up the characteristics of that particular object. No hash converting algorithm 
+is needed to access object properties.
+
+5. Determine whether you would use a hash table or an object to store each of the following pieces of data:
+
+A:
+
+A list of pets and their unique names. - HASH TABLE
+The name, age, and the birthday of your best friend. - OBJECT
+The name and location of every company in a given city. - HASH TABLE
+All of the books checked out from a library by a particular individual. - HASH TABLE
+The primary and secondary phone numbers for a contact. - HASH TABLE
+
+6. 
+Build a system that allows a sales associate to enter a customer's name, address, and phone number 
+into the system and look up customers using their phone numbers. 
+Store this information in a hash table.
+
+```JS
+var hash = (string, max) => {
+    var hash = 0;
+    for (var i = 0; i < string.length; i++) {
+      hash += string.charCodeAt(i);
+    }
+    return hash % max;
+  };
+  
+  let HashTable = function() {
+  
+    let storage = [];
+    const storageLimit = 100;
+    
+    this.print = function() {
+      console.log(storage)
+    }
+  
+    this.add = function(key, value, res) {
+      var index = hash(key, storageLimit);
+      if (storage[index] === undefined) {
+        storage[index] = [
+          [key, value, res]
+        ];
+      } else {
+        var inserted = false;
+        for (var i = 0; i < storage[index].length; i++) {
+          if (storage[index][i][0] === key) {
+            storage[index][i][1] = value;
+            storage[index][i][2] = res;
+            inserted = true;
+          }
+        }
+        if (inserted === false) {
+          storage[index].push([key, value, res]);
+        }
+      }
+    };
+  
+    this.remove = function(key) {
+      var index = hash(key, storageLimit);
+      if (storage[index].length === 1 && storage[index][0][0] === key) {
+        delete storage[index];
+      } else {
+        for (var i = 0; i < storage[index].length; i++) {
+          if (storage[index][i][0] === key) {
+            delete storage[index][i];
+          }
+        }
+      }
+    };
+  
+    this.lookup = function(key) {
+      var index = hash(key, storageLimit);
+      if (storage[index] === undefined) {
+        return undefined;
+      } else {
+        for (var i = 0; i < storage[index].length; i++) {
+          if (storage[index][i][0] === key) {
+            return [storage[index][i][1],storage[index][i][2]];
+          }
+        }
+      }
+    };
+  
+  };
+  
+  
+  console.log(hash('2813333', 100))
+  
+  var ht = new HashTable();
+  ht.add('2813333', 'Chris Paul', 'Toyota Center - Houston TX'); //[59]
+  ht.add('3057777', 'Goran Dragic', 'American Airlines Arena - Miami, FL'); //[72]
+  ht.add('3120202', 'Jabari Parker', 'United Center - Chicago, IL'); //[48]
+  ht.add('4153535', 'Kevin Durant', 'Oracle Arena - Oakland, CA'); //[62]
+  console.log(ht.lookup('2813333'));
+  ht.print();
+```
+
+7. Build a system that allows a store owner to track their store's inventory using a hash table for storage.
+
+
+```JS  
+
+var hash = (string, max) => {
+  var hash = 0;
+  for (var i = 0; i < string.length; i++) {
+    hash += string.charCodeAt(i);
+  }
+  return hash % max;
+};
+
+let HashTable = function() {
+
+  let storage = [];
+  const storageLimit = 100;
+  
+  this.print = function() {
+    console.log(storage)
+  }
+
+  this.add = function(key, value) {
+    var index = hash(key, storageLimit);
+    if (storage[index] === undefined) {
+      storage[index] = [
+        [key, value]
+      ];
+    } else {
+      var inserted = false;
+      for (var i = 0; i < storage[index].length; i++) {
+        if (storage[index][i][0] === key) {
+          storage[index][i][1] = value;
+          inserted = true;
+        }
+      }
+      if (inserted === false) {
+        storage[index].push([key, value]);
+      }
+    }
+  };
+
+  this.remove = function(key) {
+    var index = hash(key, storageLimit);
+    if (storage[index].length === 1 && storage[index][0][0] === key) {
+      delete storage[index];
+    } else {
+      for (var i = 0; i < storage[index].length; i++) {
+        if (storage[index][i][0] === key) {
+          delete storage[index][i];
+        }
+      }
+    }
+  };
+
+  this.lookup = function(key) {
+    var index = hash(key, storageLimit);
+    if (storage[index] === undefined) {
+      return undefined;
+    } else {
+      for (var i = 0; i < storage[index].length; i++) {
+        if (storage[index][i][0] === key) {
+          return storage[index][i][1];
+        }
+      }
+    }
+  };
+
+};
+
+
+console.log(hash('503', 100))
+
+let ht = new HashTable();
+ht.add('503', 'Store Item - 503: Adult Surf Board'); //52
+ht.add('729', 'Store Item - 729: Action Camera'); //62
+ht.add('499', 'Store Item - 729: Size 7 Aqua Shoes');//66
+ht.add('001', 'Store Item - 729: Infant Size Life Vest');//45
+
+console.log(ht.lookup('503'));
+ht.print();
+```
+
+
+8. Build a system that allows digital copies of newspapers to be entered and searched by publisher 
+and publication date. Use hash tables to store the necessary data.
+
+```JS
+var hash = (string, max) => {
+    var hash = 0;
+    for (var i = 0; i < string.length; i+=2) {
+      hash += string.codePointAt(i);
+    }
+    return hash;
+};
+
+let HashTable = function() {
+
+  let storage = [];
+  const storageLimit = 100;
+  
+  this.print = function() {
+    console.log(storage)
+  }
+
+  this.add = function(key, value) {
+    var index = hash(key, storageLimit);
+    if (storage[index] === undefined) {
+      storage[index] = [
+        [key, value]
+      ];
+    } else {
+      var inserted = false;
+      for (var i = 0; i < storage[index].length; i++) {
+        if (storage[index][i][0] === key) {
+          storage[index][i][1] = value;
+          inserted = true;
+        }
+      }
+      if (inserted === false) {
+        storage[index].push([key, value]);
+      }
+    }
+  };
+
+  this.remove = function(key) {
+    var index = hash(key, storageLimit);
+    if (storage[index].length === 1 && storage[index][0][0] === key) {
+      delete storage[index];
+    } else {
+      for (var i = 0; i < storage[index].length; i++) {
+        if (storage[index][i][0] === key) {
+          delete storage[index][i];
+        }
+      }
+    }
+  };
+
+  this.lookup = function(key) {
+    var index = hash(key, storageLimit);
+    if (storage[index] === undefined) {
+      return undefined;
+    } else {
+      for (var i = 0; i < storage[index].length; i++) {
+        if (storage[index][i][0] === key) {
+          return storage[index][i][1];
+        }
+      }
+    }
+  };
+
+};
+
+console.log(hash('07282018 Reuters', 1000));
+console.log(hash('07282018 Bloomberg', 1000));
+console.log(hash('07272018 Democracy Now', 1000));
+
+let ht = new HashTable();
+
+ht.add('07282018 Reuters', 'Powerful quake hits Indonesia\'s Lombok, three killed, houses damaged');
+ht.add('07282018 Bloomberg','Facebook Running Out of Users, Elevation\'s McNamee Says');
+ht.add('07272018 Democracy Now','700+ Migrant Families Still Separated as Reunification Deadline Passes');
+
+console.log(ht.lookup('07282018 Reuters')); //560
+console.log(ht.lookup('07282018 Bloomberg')); //660
+console.log(ht.lookup('07272018 Democracy Now'));//797
+
+ht.print();
+```
